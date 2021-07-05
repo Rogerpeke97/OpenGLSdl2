@@ -25,24 +25,18 @@ int main ()
 
     SDL_Init(SDL_INIT_VIDEO);
 
-    // Get current display mode of all displays.
     for(int i = 0; i < SDL_GetNumVideoDisplays(); ++i){
 
         int should_be_zero = SDL_GetCurrentDisplayMode(i, &DM);
 
         if(should_be_zero != 0)
-        // In case of error...
         SDL_Log("Could not get display mode for video display #%d: %s", i, SDL_GetError());
 
         else
-        // On success, print the current display mode.
         window_width = DM.w;
         window_height = DM.h;
-        SDL_Log("Display #%d: current display mode is %dx%dpx @ %dhz.", i, DM.w, DM.h, DM.refresh_rate);
-
     }
 
-    // Clean up and exit the program.
     SDL_Quit();
 
     SDL_GetCurrentDisplayMode(0, &DM);
