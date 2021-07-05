@@ -11,59 +11,88 @@
 #include <GL/gl.h>
 
 // typedef int32_t i32;
-typedef uint32_t u32;
+// typedef uint32_t u32;
 typedef int32_t b32;
 
-#define WinWidth 1000
-#define WinHeight 1000
-
-int main (int ArgCount, char **Args)
+int main ()
 {
-  u32 WindowFlags = SDL_WINDOW_OPENGL;
-  SDL_Window *Window = SDL_CreateWindow("OpenGL Test", 0, 0, WinWidth, WinHeight, WindowFlags);
-  assert(Window);
-  SDL_GLContext Context = SDL_GL_CreateContext(Window);
-  
-  b32 Running = 1;
-  b32 FullScreen = 0;
-  while (Running)
-  {
+
+    int window_width;
+
+    int window_height;
+
+    SDL_DisplayMode DM;
+
+    SDL_Init(SDL_INIT_VIDEO);
+
+    // Get current display mode of all displays.
+    for(int i = 0; i < SDL_GetNumVideoDisplays(); ++i){
+
+        int should_be_zero = SDL_GetCurrentDisplayMode(i, &DM);
+
+        if(should_be_zero != 0)
+        // In case of error...
+        SDL_Log("Could not get display mode for video display #%d: %s", i, SDL_GetError());
+
+        else
+        // On success, print the current display mode.
+        window_width = DM.w;
+        window_height = DM.h;
+        SDL_Log("Display #%d: current display mode is %dx%dpx @ %dhz.", i, DM.w, DM.h, DM.refresh_rate);
+
+    }
+
+    // Clean up and exit the program.
+    SDL_Quit();
+
+    SDL_GetCurrentDisplayMode(0, &DM);
+
+    unsigned int WindowFlags = SDL_WINDOW_OPENGL;
+
+    SDL_Window *Window = SDL_CreateWindow("OpenGL Test", 0, 0, window_width, window_height, WindowFlags);
+    assert(Window);
+    SDL_GLContext Context = SDL_GL_CreateContext(Window);
+
+    b32 Running = 1;
+    b32 FullScreen = 0;
+    while (Running)
+    {
     SDL_Event Event;
     while (SDL_PollEvent(&Event))
     {
-      if (Event.type == SDL_KEYDOWN)
-      {
+        if (Event.type == SDL_KEYDOWN)
+        {
         switch (Event.key.keysym.sym)
         {
-          case SDLK_ESCAPE:
+            case SDLK_ESCAPE:
             Running = 0;
             break;
-          case 'f':
+            case 'f':
             FullScreen = !FullScreen;
             if (FullScreen)
             {
-              SDL_SetWindowFullscreen(Window, WindowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
+                SDL_SetWindowFullscreen(Window, WindowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
             }
             else
             {
-              SDL_SetWindowFullscreen(Window, WindowFlags);
+                SDL_SetWindowFullscreen(Window, WindowFlags);
             }
             break;
-          default:
+            default:
             break;
         }
-      }
-      else if (Event.type == SDL_QUIT)
-      {
+        }
+        else if (Event.type == SDL_QUIT)
+        {
         Running = 0;
-      }
+        }
     }
 
-    glViewport(0, 0, WinWidth, WinHeight);
+    glViewport(0, 0, window_width, window_height);
     glClearColor(1.f, 0.f, 1.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     SDL_GL_SwapWindow(Window);
-  }
-  return 0;
+    }
+    return 0;
 }
