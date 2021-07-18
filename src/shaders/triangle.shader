@@ -1,6 +1,7 @@
-#version 330 core 
+#shader vertex
+#version 320 es 
 
-layout(location = 0) in vec3 position;
+layout(location = 0) in vec4 position;
 
 void main()
 {
@@ -8,7 +9,7 @@ void main()
 };
 
 #shader fragment
-#version 330 core 
+#version 320 es 
 
 layout(location = 0) out vec4 color;
 

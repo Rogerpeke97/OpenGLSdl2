@@ -31,6 +31,12 @@ static std::string parseShader(const std::string& filepath, unsigned int type) {
 void createTriangle(){
   //If you want to use SDL_opengl.h define GL_GLEXT_PROTOTYPES before including it.
   std:: cout << "triangle.cpp works! /n;" << std::endl;
+  const std::string shaderFileParsed = parseShader("./shaders/triangle.shader", GL_VERTEX_SHADER);
+  const char *vertexShaderData = shaderFileParsed.c_str();
+
+  std:: cout << shaderFileParsed << std::endl;
+  unsigned int vertexShader;
+  vertexShader = glCreateShader(GL_VERTEX_SHADER);
   //Create parallepiped
   float vertices[] = {
     -0.5f, -0.5f, 0.0f,
@@ -47,4 +53,19 @@ void createTriangle(){
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  glShaderSource(vertexShader, 1, &vertexShaderData, NULL);
+
+  glCompileShader(vertexShader);
+
+
+  int  success;
+  char infoLog[512];
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if(!success)
+  {
+      glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+      std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+  }
+
 }

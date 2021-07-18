@@ -2,6 +2,7 @@
 //	 g++ sdl2_opengl.cpp -lSDL2 -lGL
 // To compile with msvc: (tested on Windows 7 64bit)
 //   cl sdl2_opengl.cpp /I C:\sdl2path\include /link C:\path\SDL2.lib C:\path\SDL2main.lib /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmtd.lib opengl32.lib
+#define GL_GLEXT_PROTOTYPES
 #include <iostream>
 #include <stdio.h>
 #include <stdint.h>
@@ -9,84 +10,79 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/gl.h>
+#include <fstream>
+#include <string> /*for getLine()*/
+#include "scene/triangle.cpp"
 
 // typedef int32_t i32;
 // typedef uint32_t u32;
 typedef int32_t b32;
 
-int main ()
-{
+int main (){
 
-    int window_width;
+  unsigned short window_width;
 
-    int window_height;
+  unsigned short window_height;
 
-    SDL_DisplayMode DM;
+  SDL_DisplayMode DM;
 
-    SDL_Init(SDL_INIT_VIDEO);
+  SDL_Init(SDL_INIT_VIDEO);
 
-    for(int i = 0; i < SDL_GetNumVideoDisplays(); ++i){
+  for(int i = 0; i < SDL_GetNumVideoDisplays(); ++i){
 
-        int should_be_zero = SDL_GetCurrentDisplayMode(i, &DM);
+    int should_be_zero = SDL_GetCurrentDisplayMode(i, &DM);
 
-        if(should_be_zero != 0)
-        SDL_Log("Could not get display mode for video display #%d: %s", i, SDL_GetError());
+    if(should_be_zero != 0)
+      SDL_Log("Could not get display mode for video display #%d: %s", i, SDL_GetError());
 
-        else
-        window_width = DM.w;
-        window_height = DM.h;
-    }
+    else
+    window_width = DM.w;
+    window_height = DM.h;
+  }
 
-    SDL_Quit();
+  SDL_Quit();
 
-    SDL_GetCurrentDisplayMode(0, &DM);
+  SDL_GetCurrentDisplayMode(0, &DM);
+  
+  unsigned int WindowFlags = SDL_WINDOW_OPENGL;
 
-    unsigned int WindowFlags = SDL_WINDOW_OPENGL;
+  SDL_Window *Window = SDL_CreateWindow("OpenGL Test", 0, 0, window_width, window_height, WindowFlags);
+  assert(Window);
+  SDL_GLContext Context = SDL_GL_CreateContext(Window);
 
-    SDL_Window *Window = SDL_CreateWindow("OpenGL Test", 0, 0, window_width, window_height, WindowFlags);
-    assert(Window);
-    SDL_GLContext Context = SDL_GL_CreateContext(Window);
-
-    b32 Running = 1;
-    b32 FullScreen = 0;
-    while (Running)
-    {
+  b32 Running = 1;
+  b32 FullScreen = 0;
+  while (Running){
     SDL_Event Event;
-    while (SDL_PollEvent(&Event))
-    {
-        if (Event.type == SDL_KEYDOWN)
-        {
-        switch (Event.key.keysym.sym)
-        {
-            case SDLK_ESCAPE:
+    while (SDL_PollEvent(&Event)){
+      if (Event.type == SDL_KEYDOWN){
+        switch (Event.key.keysym.sym){
+          case SDLK_ESCAPE:
             Running = 0;
-            break;
-            case 'f':
+          break;
+          case SDLK_f:
             FullScreen = !FullScreen;
-            if (FullScreen)
-            {
-                SDL_SetWindowFullscreen(Window, WindowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
+            if (FullScreen){
+              SDL_SetWindowFullscreen(Window, WindowFlags | SDL_WINDOW_FULLSCREEN_DESKTOP);
             }
-            else
-            {
-                SDL_SetWindowFullscreen(Window, WindowFlags);
+            else{
+              SDL_SetWindowFullscreen(Window, WindowFlags);
             }
             break;
             default:
             break;
         }
-        }
-        else if (Event.type == SDL_QUIT)
-        {
+      }
+      else if (Event.type == SDL_QUIT){
         Running = 0;
-        }
+      }
     }
 
     glViewport(0, 0, window_width, window_height);
     glClearColor(1.f, 0.f, 1.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    createTriangle();
     SDL_GL_SwapWindow(Window);
-    }
-    return 0;
+  }
+  return 0;
 }
