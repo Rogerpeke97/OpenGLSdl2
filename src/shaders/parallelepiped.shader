@@ -11,7 +11,7 @@ void main()
 #shader fragment
 #version 320 es 
 
-layout(location = 0) out vec4 color;
+out lowp vec4 color;
 
 void main()
 {

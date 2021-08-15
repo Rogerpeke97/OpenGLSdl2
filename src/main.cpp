@@ -12,7 +12,7 @@
 #include <GL/gl.h>
 #include <fstream>
 #include <string> /*for getLine()*/
-#include "scene/triangle.cpp"
+#include "scene/parallelepiped.cpp"
 
 // typedef int32_t i32;
 // typedef uint32_t u32;
@@ -79,9 +79,9 @@ int main (){
     }
 
     glViewport(0, 0, window_width, window_height);
-    glClearColor(1.f, 0.f, 1.f, 0.f);
+    glClearColor(0.588f, 0.294f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    createTriangle();
+    createParallelepiped();
     SDL_GL_SwapWindow(Window);
   }
   return 0;

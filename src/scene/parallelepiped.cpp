@@ -28,18 +28,20 @@ static std::string parseShader(const std::string& filepath, unsigned int type) {
 }
 
 
-void createTriangle(){
+void createParallelepiped(){
   //If you want to use SDL_opengl.h define GL_GLEXT_PROTOTYPES before including it.
-  std:: cout << "triangle.cpp works! /n;" << std::endl;
 
   const std::string shaderFileParsedVertex = parseShader("./shaders/parallelepiped.shader", GL_VERTEX_SHADER);
-  const std::string shaderFileParsedColor = parseShader("./shaders/parallelepiped.shader", GL_VERTEX_SHADER);
+  const std::string shaderFileParsedColor = parseShader("./shaders/parallelepiped.shader", GL_FRAGMENT_SHADER);
+
+  // std::cout << shaderFileParsedColor << std::endl;
+  // std::cout << shaderFileParsedVertex << std::endl;
+
 
   const char *vertexShaderData = shaderFileParsedVertex.c_str();
 
   const char *colorShaderData = shaderFileParsedColor.c_str();
 
-  // std:: cout << shaderFileParsedVertex << std::endl;
   unsigned int vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
   //Create parallelepiped
@@ -52,6 +54,12 @@ void createTriangle(){
     -0.2f, 0.5f, 0.0f,
     0.8f, 0.5f, 0.0f
   };
+
+
+  unsigned int VAO;
+  glGenVertexArrays(1, &VAO); 
+  glBindVertexArray(VAO);
+
 
   //shaders  
   unsigned int VBO;
@@ -78,15 +86,33 @@ void createTriangle(){
   glAttachShader(shaderProgram, vertexShader);
   glAttachShader(shaderProgram, fragmentShader);
 
+  glLinkProgram(shaderProgram);
   
 
-  int  success;
+  int success;
   char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
   if(!success)
   {
-      glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+      glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+      std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+  }
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);  
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+
+
+  int programSuccess;
+  char infoProgramLog[512];
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &programSuccess);
+  if(!programSuccess){
+    glGetProgramInfoLog(shaderProgram, 512, NULL, infoProgramLog);
+    std::cout << "Error with the program shader \n" << infoProgramLog << std::endl;
   }
 
+  glUseProgram(shaderProgram);
+  glBindVertexArray(VAO);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
 }
