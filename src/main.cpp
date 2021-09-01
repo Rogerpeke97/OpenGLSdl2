@@ -5,14 +5,18 @@
 #define GL_GLEXT_PROTOTYPES
 #include <iostream>
 #include <stdio.h>
-#include <stdint.h>
+#include <stdint.h> 
 #include <assert.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/gl.h>
 #include <fstream>
 #include <string> /*for getLine()*/
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_impl_opengl3.h"
 #include "scene/parallelepiped.cpp"
+
 
 // typedef int32_t i32;
 // typedef uint32_t u32;
@@ -50,11 +54,28 @@ int main (){
   assert(Window);
   SDL_GLContext Context = SDL_GL_CreateContext(Window);
 
+  // setup Dear ImGui context
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+  ImGui::StyleColorsDark();
+
+  ImGui_ImplSDL2_InitForOpenGL(Window, Context);
+  ImGui_ImplOpenGL3_Init("#version 320 es");
+
+  ImVec4 background = ImVec4(35/255.0f, 35/255.0f, 35/255.0f, 1.00f);
+
   b32 Running = 1;
   b32 FullScreen = 0;
   while (Running){
     SDL_Event Event;
     while (SDL_PollEvent(&Event)){
+      ImGui_ImplSDL2_ProcessEvent(&Event);
       if (Event.type == SDL_KEYDOWN){
         switch (Event.key.keysym.sym){
           case SDLK_ESCAPE:
@@ -77,6 +98,8 @@ int main (){
         Running = 0;
       }
     }
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(Window);
 
     glViewport(0, 0, window_width, window_height);
     glClearColor(0.588f, 0.294f, 0.f, 0.f);

@@ -46,15 +46,15 @@ void createParallelepiped(){
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
   //Create parallelepiped
   float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.8f,  0.5f, 0.0f,
-
-    -0.5f, -0.5f, 0.0f,
-    -0.2f, 0.5f, 0.0f,
-    0.8f, 0.5f, 0.0f
+    -0.25f, -0.15f, 0.0f,
+     0.25f, -0.15f, 0.0f,
+    -0.05f, 0.15f, 0.0f,
+    0.45f, 0.15f, 0.0f,
   };
-
+  unsigned int indices[] = {
+    0, 1, 3,
+    0, 2, 3
+  };
 
   unsigned int VAO;
   glGenVertexArrays(1, &VAO); 
@@ -73,13 +73,19 @@ void createParallelepiped(){
 
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+  //indices
+  unsigned int EBO;
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); 
+  
+  //Shader program 
   glShaderSource(vertexShader, 1, &vertexShaderData, NULL);
   glShaderSource(fragmentShader, 1, &colorShaderData, NULL);
 
   glCompileShader(vertexShader);
   glCompileShader(fragmentShader);
 
-  //Shader program 
   unsigned int shaderProgram;
   shaderProgram = glCreateProgram();
 
@@ -111,8 +117,8 @@ void createParallelepiped(){
     glGetProgramInfoLog(shaderProgram, 512, NULL, infoProgramLog);
     std::cout << "Error with the program shader \n" << infoProgramLog << std::endl;
   }
-
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glUseProgram(shaderProgram);
   glBindVertexArray(VAO);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
