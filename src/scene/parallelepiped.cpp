@@ -1,46 +1,62 @@
 
 
 static std::string parseShader(const std::string& filepath, unsigned int type) {
-    std::ifstream streamFile(filepath);
+  std::ifstream streamFile(filepath);
 
-    std::string shaders_line;
+  std::string shaders_line;
 
-    unsigned int type_to_add;
+  unsigned int type_to_add;
 
-    std::string shader;
+  std::string shader;
 
-    while (getline(streamFile, shaders_line)) {
-        // Output the text from the file
-        if (shaders_line.find("#shader vertex") != std::string::npos) {
-            type_to_add = GL_VERTEX_SHADER;
+  while (getline(streamFile, shaders_line)) {
+      // Output the text from the file
+      if (shaders_line.find("#shader vertex") != std::string::npos) {
+          type_to_add = GL_VERTEX_SHADER;
 
-        }
-        else if(shaders_line.find("#shader fragment") != std::string::npos) {
-            type_to_add = GL_FRAGMENT_SHADER;
-        }
-        else {
-            if (type_to_add == type) {
-                shader += shaders_line + "\n";
-            }
-        }
-    }
-    return shader;
+      }
+      else if(shaders_line.find("#shader fragment") != std::string::npos) {
+          type_to_add = GL_FRAGMENT_SHADER;
+      }
+      else {
+          if (type_to_add == type) {
+              shader += shaders_line + "\n";
+          }
+      }
+  }
+  return shader;
 }
 
 
 void createParallelepiped(){
+  //Define Imgui window to debug
+
+    ImGui::Begin("MyWindow");
+
+
+
   //If you want to use SDL_opengl.h define GL_GLEXT_PROTOTYPES before including it.
 
-  const std::string shaderFileParsedVertex = parseShader("./shaders/parallelepiped.shader", GL_VERTEX_SHADER);
-  const std::string shaderFileParsedColor = parseShader("./shaders/parallelepiped.shader", GL_FRAGMENT_SHADER);
+  const std::string shaderFileParsedVertex = parseShader("../src/shaders/parallelepiped.shader", GL_VERTEX_SHADER);
+  const std::string shaderFileParsedColor = parseShader("../src/shaders/parallelepiped.shader", GL_FRAGMENT_SHADER);
 
   // std::cout << shaderFileParsedColor << std::endl;
-  // std::cout << shaderFileParsedVertex << std::endl;
+  // std::cout << shaderFileParsedVertex.c_str() << std::endl;
 
 
   const char *vertexShaderData = shaderFileParsedVertex.c_str();
 
   const char *colorShaderData = shaderFileParsedColor.c_str();
+
+  const std::string result = shaderFileParsedVertex + shaderFileParsedColor;
+
+  const ImVec4 textVector = ImVec4(0.588f, 0.294f, 0.f, 0.f);
+  ImGui::TextColored(textVector, "Debug Information");
+  ImGui::BeginChild("Scrolling");
+  ImGui::Text("%s", result.c_str());
+  ImGui::EndChild();
+  ImGui::End();
+
 
   unsigned int vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);

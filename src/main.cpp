@@ -54,24 +54,21 @@ int main (){
   assert(Window);
   SDL_GLContext Context = SDL_GL_CreateContext(Window);
 
-  // setup Dear ImGui context
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
+  // setup ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO(); (void)io;
+  ImGuiIO& io = ImGui::GetIO(); 
+  (void)io;//This (void) casting construct is a no-op that makes the warning of unused parameters/variables go away.
 
   ImGui::StyleColorsDark();
 
   ImGui_ImplSDL2_InitForOpenGL(Window, Context);
-  ImGui_ImplOpenGL3_Init("#version 320 es");
+  ImGui_ImplOpenGL3_Init("#version 130");
 
   ImVec4 background = ImVec4(35/255.0f, 35/255.0f, 35/255.0f, 1.00f);
 
-  b32 Running = 1;
-  b32 FullScreen = 0;
+  bool Running = true;
+  bool FullScreen = false;
   while (Running){
     SDL_Event Event;
     while (SDL_PollEvent(&Event)){
@@ -79,7 +76,7 @@ int main (){
       if (Event.type == SDL_KEYDOWN){
         switch (Event.key.keysym.sym){
           case SDLK_ESCAPE:
-            Running = 0;
+            Running = false;
           break;
           case SDLK_f:
             FullScreen = !FullScreen;
@@ -95,17 +92,27 @@ int main (){
         }
       }
       else if (Event.type == SDL_QUIT){
-        Running = 0;
+        Running = false;
       }
     }
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(Window);
 
+    ImGui::NewFrame();
+
     glViewport(0, 0, window_width, window_height);
     glClearColor(0.588f, 0.294f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    createParallelepiped();
+
+    createParallelepiped();//Used Imgui to debug the scene
+    
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     SDL_GL_SwapWindow(Window);
   }
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplSDL2_Shutdown();
+  ImGui::DestroyContext();
   return 0;
 }

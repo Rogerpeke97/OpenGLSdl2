@@ -1,10 +1,12 @@
-cmake_minimum_required(VERSION 3.20.5)
+cmake_minimum_required(VERSION 3.16.3)
+
+# set(CMAKE_CXX_FLAGS "-std=c++14")
+
 
 project(OPENGLPROJECT2 VERSION 0.1.0)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
-
 
 set(sources
     src/main.cpp
