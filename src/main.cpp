@@ -15,7 +15,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include "scene/parallelepiped.cpp"
+#include "scene/Scene.cpp"
 
 
 // typedef int32_t i32
@@ -67,6 +67,11 @@ int main (){
 
   ImVec4 background = ImVec4(35/255.0f, 35/255.0f, 35/255.0f, 1.00f);
 
+
+  Scene scene;
+  
+  scene.setup();
+
   bool Running = true;
   bool FullScreen = false;
   while (Running){
@@ -104,7 +109,19 @@ int main (){
     glClearColor(0.588f, 0.294f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    createParallelepiped();//Used Imgui to debug the scene
+  //Define Imgui window to debug
+
+    ImGui::Begin("MyWindow");
+
+    //If you want to use SDL_opengl.h define GL_GLEXT_PROTOTYPES before including it.
+
+    const ImVec4 textVector = ImVec4(0.588f, 0.294f, 0.f, 0.f);
+    ImGui::TextColored(textVector, "Debug Information");
+    ImGui::BeginChild("Scrolling");
+    ImGui::EndChild();
+    ImGui::End();
+
+    scene.render();//Used Imgui to debug the scene
     
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
