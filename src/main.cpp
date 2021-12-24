@@ -17,7 +17,6 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "scene/Scene.cpp"
 
-
 // typedef int32_t i32
 // typedef uint32_t u32
 typedef int32_t b32;
@@ -64,9 +63,6 @@ int main (){
 
   ImGui_ImplSDL2_InitForOpenGL(Window, Context);
   ImGui_ImplOpenGL3_Init("#version 130");
-
-  ImVec4 background = ImVec4(35/255.0f, 35/255.0f, 35/255.0f, 1.00f);
-
 
   Scene scene;
   

@@ -1,4 +1,7 @@
 #include "Scene.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void Scene::setup()
 {
@@ -131,5 +134,15 @@ std::string Scene::parseShader(const std::string &filepath, unsigned int type)
 
 void Scene::render()
 {
+  Scene::setupCamera();
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void Scene::setupCamera()
+{
+  glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+  glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 cameraDirectionZ = glm::normalize(cameraPosition - cameraTarget);
+  std::cout << "Camera direction: " << cameraDirectionZ.x << " " << cameraDirectionZ.y << " " << cameraDirectionZ.z << std::endl;
+
 }

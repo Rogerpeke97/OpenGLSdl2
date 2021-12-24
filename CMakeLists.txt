@@ -27,8 +27,14 @@ set(sources
     src/imgui/imgui_tables.cpp
 )
 
-
 add_executable(OPENGLPROJECT2 ${sources})
+
+target_compile_options(OPENGLPROJECT2 PRIVATE -Wall)
+
+#glm
+add_subdirectory(src/glm EXCLUDE_FROM_ALL)
+target_link_libraries(OPENGLPROJECT2 glm)
+
 
 target_link_libraries(OPENGLPROJECT2 SDL2main SDL2 GL)
 target_link_libraries(OPENGLPROJECT2 ${CMAKE_DL_LIBS})
