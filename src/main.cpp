@@ -16,6 +16,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "scene/Scene.cpp"
+#include "scene/camera/Camera.cpp"
 
 // typedef int32_t i32
 // typedef uint32_t u32
@@ -65,8 +66,12 @@ int main (){
   ImGui_ImplOpenGL3_Init("#version 130");
 
   Scene scene;
+
+  Camera camera;
   
   scene.setup();
+
+  camera.setupCamera(scene);
 
   bool Running = true;
   bool FullScreen = false;
@@ -90,6 +95,10 @@ int main (){
             break;
             default:
             break;
+            case SDLK_SPACE:
+              camera.updateCamera("z");
+            break;
+
         }
       }
       else if (Event.type == SDL_QUIT){

@@ -1,28 +1,43 @@
+#ifndef SCENE_CLASS_H
+#define SCENE_CLASS_H
+
+
+
 class Scene
+
 {
+private:
+  unsigned int vertexShader;
 
-public:
+  unsigned int VBO;
 
- unsigned int vertexShader;
+  unsigned int fragmentShader;
 
- unsigned int VBO;
+  const char *vertexShaderData;
 
- unsigned int fragmentShader;
+  const char *colorShaderData;
 
- const char *vertexShaderData;
+  unsigned int VAO;
 
- const char *colorShaderData;
+  unsigned int EBO;
 
- unsigned int VAO;
+  unsigned int shaderProgram;
 
- unsigned int EBO;
+  public:
 
- void setup();
+  void setup();
 
- static std::string parseShader(const std::string &filepath, unsigned int type);
+  static std::string parseShader(const std::string &filepath, unsigned int type);
 
- void render();
+  void render();
 
- void setupCamera();
+  void setupCamera();
+
+  void updateCamera(std::string translationDirection);
+
+  unsigned int getShaderProgram();
 
 };
+
+
+#endif
