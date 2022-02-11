@@ -1,10 +1,9 @@
 #include "Camera.h"
-#include "../Scene.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-void Camera::setupCamera(Scene scene)
+void Camera::setupCamera(Scene& scene)
 {
 
   cameraDirectionZ = glm::normalize(cameraPosition - cameraTarget);
@@ -22,9 +21,9 @@ void Camera::setupCamera(Scene scene)
   view = glm::lookAt(cameraPosition, cameraPosition + cameraDirectionZ, cameraDirectionY);
 
 
-  glUniformMatrix4fv(glGetUniformLocation(scene.getShaderProgram(), "view"), 1, GL_FALSE, &view[0][0]);
+  glUniformMatrix4fv(glGetUniformLocation(scene.getShaderProgram(), "cameraMatrix"), 1, GL_FALSE, glm::value_ptr(view));
 
-  std::cout << "Camera direction: " << cameraDirectionZ.x << " " << cameraDirectionZ.y << " " << cameraDirectionZ.z << std::endl;
+  std::cout << "Scene shaderProgram: " << scene.getShaderProgram() << std::endl;
 
 }
 
@@ -33,7 +32,7 @@ void Camera::updateCamera(std::string translationDirection){
   std::cout << "Translation direction: " << translationDirection <<  std::endl;
   if(translationDirection == "z"){
     std::cout << "Translation direction: " << translationDirection <<  std::endl;
-    cameraPosition += cameraSpeed * cameraDirectionZ;
+    cameraPosition -= cameraSpeed * cameraDirectionZ;
   }
 
     // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)

@@ -65,13 +65,11 @@ int main (){
   ImGui_ImplSDL2_InitForOpenGL(Window, Context);
   ImGui_ImplOpenGL3_Init("#version 130");
 
-  Scene scene;
-
   Camera camera;
-  
-  scene.setup();
 
-  camera.setupCamera(scene);
+  Scene scene;
+  
+  scene.setup(camera);
 
   bool Running = true;
   bool FullScreen = false;

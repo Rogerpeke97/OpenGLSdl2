@@ -3,9 +3,11 @@
 
 layout(location = 0) in vec4 position;
 
+uniform mat4 cameraMatrix;
+
 void main()
 {
-   gl_Position = position;
+   gl_Position = cameraMatrix * position;
 };
 
 #shader fragment

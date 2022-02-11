@@ -1,7 +1,7 @@
 #ifndef SCENE_CLASS_H
 #define SCENE_CLASS_H
 
-
+#include "camera/Camera.h"
 
 class Scene
 
@@ -25,15 +25,11 @@ private:
 
   public:
 
-  void setup();
+  void setup(Camera camera);
 
   static std::string parseShader(const std::string &filepath, unsigned int type);
 
   void render();
-
-  void setupCamera();
-
-  void updateCamera(std::string translationDirection);
 
   unsigned int getShaderProgram();
 

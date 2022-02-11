@@ -1,9 +1,10 @@
 #include "Scene.h"
+#include "camera/Camera.cpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-void Scene::setup()
+void Scene::setup(Camera camera)
 {
  const std::string shaderFileParsedVertex = Scene::parseShader("../src/shaders/parallelepiped.shader", GL_VERTEX_SHADER);
  const std::string shaderFileParsedColor = Scene::parseShader("../src/shaders/parallelepiped.shader", GL_FRAGMENT_SHADER);
@@ -57,6 +58,8 @@ void Scene::setup()
  glCompileShader(fragmentShader);
 
  shaderProgram = glCreateProgram();
+
+ camera.setupCamera(*this);
 
  glAttachShader(shaderProgram, vertexShader);
  glAttachShader(shaderProgram, fragmentShader);

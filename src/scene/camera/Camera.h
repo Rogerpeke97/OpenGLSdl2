@@ -19,7 +19,7 @@ private:
   glm::vec3 cameraDirectionY;
 
 public:
-  void setupCamera(Scene scene);
+  void setupCamera(Scene& scene);
 
   void updateCamera(std::string translationDirection);
   
